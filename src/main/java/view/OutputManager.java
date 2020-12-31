@@ -1,12 +1,8 @@
 package view;
 
 import model.EmployeeDTO;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class OutputManager {
-
-    public static final Logger logger = LogManager.getLogger(OutputManager.class);
 
     public static void printEmployeeDetails(EmployeeDTO employee) {
         System.out.println(employee.getEmployeeID());

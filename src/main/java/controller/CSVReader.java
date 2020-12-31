@@ -1,16 +1,18 @@
 package controller;
 
-import model.EmployeeDTO;
-import view.OutputManager;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class CSVReader {
 
-    public static ArrayList<EmployeeDTO> readEmployees(String path) {
+    public static final Logger logger = LogManager.getLogger(CSVReader.class);
+
+    public static void readEmployees(String path) {
         try {
             BufferedReader bufferedReader = new BufferedReader((new FileReader(path)));
             String employeeData;
@@ -23,10 +25,9 @@ public class CSVReader {
         } catch(IOException e) {
             e.printStackTrace();
         }
-        OutputManager.logger.info("Complete/unique employee data count::  " + EmployeeManager.getEmployeeCount());
-        OutputManager.logger.info("Corrupt/duplicated employee data count::  " + EmployeeManager.getEmployeeCorruptedCount());
 
-        return EmployeeManager.employees;
+        logger.info("Complete/unique employee data count::  " + EmployeeManager.getEmployeeCount());
+        logger.info("Corrupt/duplicated employee data count::  " + EmployeeManager.getEmployeeCorruptedCount());
     }
 
     public static void readValues(String path) {

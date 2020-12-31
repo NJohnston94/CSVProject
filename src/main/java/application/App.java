@@ -1,6 +1,8 @@
 package application;
 
 import controller.CSVReader;
+import controller.EmployeeDAO;
+import controller.EmployeeManager;
 import view.OutputManager;
 
 /**
@@ -12,7 +14,9 @@ public class App
     {
         OutputManager.headerFooter();
 
+        EmployeeDAO.connectToDB();
         CSVReader.readEmployees("src/main/resources/EmployeeRecords.csv");
+        EmployeeManager.pushToDB(EmployeeManager.employees);
 
         OutputManager.headerFooter();
     }

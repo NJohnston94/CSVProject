@@ -1,14 +1,18 @@
 package controller;
 
 import model.EmployeeDTO;
-import view.OutputManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
 public class EmployeeManager {
 
+    public static final Logger logger = LogManager.getLogger(EmployeeManager.class);
+
     private static int employeeCount = 0;
     private static int employeeCorruptedCount = 0;
+    private static int successfulPushes = 0;
     private static boolean missingEntry = false;
 
     public  static ArrayList<EmployeeDTO> employees            = new ArrayList<>();
@@ -86,20 +90,36 @@ public class EmployeeManager {
     private static void addDuplicateToCorrupted(EmployeeDTO employee, boolean uniqueID) {
         if(!uniqueID) {
             addEmployeeCorrupted(employee);
-            OutputManager.logger.info("Duplicate added to employeesCorrupted");
+            logger.debug("Duplicate added to employeesCorrupted");
         }
     }
 
     public static void addEmployee(EmployeeDTO employee) {
         employees.add(employee);
         employeeCount++;
-        OutputManager.logger.info("Employee added to employees");
+        logger.debug("Employee added to employees");
     }
 
     public static void addEmployeeCorrupted(EmployeeDTO employee) {
         employeesCorrupted.add(employee);
         employeeCorruptedCount++;
-        OutputManager.logger.info("Employee added to employeesCorrupted");
+        logger.debug("Employee added to employeesCorrupted");
+    }
+
+    public static void pushToDB(ArrayList<EmployeeDTO> employees) {
+        Long startTime = System.nanoTime();
+        logger.info("Pushing " + employeeCount + " data to database");
+
+        for(EmployeeDTO employee:employees) {
+            EmployeeDAO.insertEmployeeData(employee);
+            logger.debug("Employee data pushed to database");
+            successfulPushes++;
+        }
+
+        Long finishTime = System.nanoTime();
+        long timeTaken = finishTime - startTime;
+        logger.info("Time taken to push " + successfulPushes + " to database:: " + (timeTaken/1_000_000_000) + "s");
+
     }
 
 }
